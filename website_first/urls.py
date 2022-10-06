@@ -32,4 +32,10 @@ urlpatterns = [
     path('userinfo/deleteuser/<str:user_id>/', uviews.deleteuser, name='deleteuser'),
     path('userinfo/updateuser/<str:user_id>/', uviews.updateuser, name='updateuser'),
     path('userinfo/updateuser/', uviews.updateuser, name='updateuser'),
+    path('courseinfo/', uviews.courseinfo, name="courseinfo"),
+    path('courseinfo/entercourseinfo/', uviews.entercourseinfo, name='entercourseinfo'),
+    path('courseinfo/deletecourse/', uviews.deletecourse, name='deletecourse'),
+    path('courseinfo/deletecourse/<str:course_id>/', uviews.deletecourse, name='deletecourse'),
+    path('courseinfo/updatecourse/<str:course_id>/', uviews.updatecourse, name='updatecourse'),
+    path('courseinfo/updatecourse/', uviews.updatecourse, name='updatecourse'),
 ]
