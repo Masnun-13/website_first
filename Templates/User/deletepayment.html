@@ -1,7 +1,7 @@
-{% extends 'Routine/base.html' %}
+{% extends 'User/base.html' %}
 
 {% block title %}
-Delete Activity List
+Delete Payment Information
 {% endblock %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -12,7 +12,7 @@ Delete Activity List
                 {{ form | crispy }}
             </fieldset>
             <button class="form-group btn btn-outline-info" type="submit">
-                Delete Activity List
+                Delete Payment Information
             </button>
         </form>
     </div>

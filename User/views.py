@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .form import UserRegistrationForm, UserInfoForm, UserDeleteForm, CourseInfoForm, CourseDeleteForm
-from .models import Userinfo, Courseinfo
+from .form import UserRegistrationForm, UserInfoForm, UserDeleteForm, CourseInfoForm, CourseDeleteForm, PaymentInfoForm, MakePaymentForm, PaymentDeleteForm
+from .models import Userinfo, Courseinfo, Paymentinfo
 from django.contrib.auth.decorators import login_required
 
 def home(request):
@@ -131,3 +131,98 @@ def updatecourse(request, course_id):
     form = CourseInfoForm(initial=course.__dict__)
     context = {'form': form, 'course' : course}
     return render(request, "User/updatecourse.html", context)
+
+@login_required
+def paymentinfo(request):
+    for r in Paymentinfo.objects.all():
+        if(r.payment_paid>=r.payment_due):
+            r.payment_status="Paid"
+            r.save()
+        elif(r.payment_paid>0):
+            r.payment_status = "Partially Paid"
+            r.save()
+    pinfo = Paymentinfo.objects.all().order_by('payment_userid', 'payment_semester', 'payment_installment')
+    context = {'pinfo': pinfo}
+    return render(request, "User/paymentinfo.html", context)
+
+@login_required()
+def enterpaymentinfo(request):
+    if(request.method == "POST"):
+        form = PaymentInfoForm(request.POST)
+        if(form.is_valid()):
+            a = form.instance.payment_userid
+            b = form.instance.payment_semester
+            for t in range (1, 6):
+                r = Paymentinfo(payment_userid=a, payment_semester=b,
+                                payment_installment=t, payment_due=14850,
+                                payment_paid=0, payment_status="Unpaid")
+                r.save()
+            for r in Paymentinfo.objects.all():
+                if (r.payment_paid >= r.payment_due):
+                    r.payment_status = "Paid"
+                    r.save()
+                elif(r.payment_paid > 0):
+                    r.payment_status = "Partially Paid"
+                    r.save()
+            pinfo = Paymentinfo.objects.all().order_by('payment_userid', 'payment_semester', 'payment_installment')
+            context = {'pinfo': pinfo}
+            return render(request, "User/paymentinfo.html", context)
+    else:
+        form = PaymentInfoForm()
+    context = {'form': form}
+    return render(request, "User/enterpaymentinfo.html", context)
+
+def deletepaymentinfo(request):
+    if(request.method == "POST"):
+        form = PaymentDeleteForm(request.POST)
+        if(form.is_valid()):
+            a = form.instance.payment_userid
+            b = form.instance.payment_semester
+            for r in Paymentinfo.objects.all():
+                if(r.payment_userid==a and r.payment_semester==b):
+                    r.delete()
+            for r in Paymentinfo.objects.all():
+                if (r.payment_paid >= r.payment_due):
+                    r.payment_status = "Paid"
+                    r.save()
+                elif (r.payment_paid > 0):
+                    r.payment_status = "Partially Paid"
+                    r.save()
+            pinfo = Paymentinfo.objects.all().order_by('payment_userid', 'payment_semester', 'payment_installment')
+            context = {'pinfo': pinfo}
+            return render(request, "User/paymentinfo.html", context)
+    else:
+        form = PaymentDeleteForm()
+    context = {'form': form}
+    return render(request, "User/deletepayment.html", context)
+
+def makepayment(request):
+    if(request.method == "POST"):
+        form = MakePaymentForm(request.POST)
+        if(form.is_valid()):
+            a = form.instance.payment_userid
+            s = form.instance.payment_semester
+            b = form.instance.payment_paid
+            for t in range (1,6):
+                r = Paymentinfo.objects.get(payment_userid=a, payment_semester=s, payment_installment=t)
+                if(b<=(r.payment_due-r.payment_paid)):
+                    r.payment_paid+=b
+                    b=0;
+                else:
+                    b-=(r.payment_due-r.payment_paid)
+                    r.payment_paid=r.payment_due
+                r.save()
+            for r in Paymentinfo.objects.all():
+                if (r.payment_paid >= r.payment_due):
+                    r.payment_status = "Paid"
+                    r.save()
+                elif(r.payment_paid > 0):
+                    r.payment_status = "Partially Paid"
+                    r.save()
+            pinfo = Paymentinfo.objects.all().order_by('payment_userid', 'payment_semester', 'payment_installment')
+            context = {'pinfo': pinfo}
+            return render(request, "User/paymentinfo.html", context)
+    else:
+        form = MakePaymentForm()
+    context = {'form': form}
+    return render(request, "User/makepayment.html", context)

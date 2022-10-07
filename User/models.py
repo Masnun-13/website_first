@@ -23,3 +23,14 @@ class Courseinfo(models.Model):
 
     class Meta:
         db_table = "Course Info"
+
+class Paymentinfo(models.Model):
+    payment_userid = models.CharField(max_length=8, default=18201000, verbose_name='User ID')
+    payment_semester = models.CharField(max_length=50, db_column="Semester", default = "1-1", verbose_name='Semester')
+    payment_installment = models.IntegerField(db_column="Installment", default=0, verbose_name='Installment')
+    payment_due = models.IntegerField(db_column="Due", default=0, verbose_name='Due')
+    payment_paid = models.IntegerField(db_column="Paid", default=0, verbose_name='Paid')
+    payment_status = models.CharField(max_length=10, db_column="Payment Status", default="Unpaid", verbose_name='Payment Status')
+
+    class Meta:
+        db_table = "Payment Info"

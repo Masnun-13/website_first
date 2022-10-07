@@ -1,7 +1,7 @@
-{% extends 'Routine/base.html' %}
+{% extends 'User/base.html' %}
 
 {% block title %}
-Update Activity
+Make Payment
 {% endblock %}
 {% load crispy_forms_tags %}
 {% block content %}
@@ -11,9 +11,7 @@ Update Activity
             <fieldset>
                 {{ form | crispy }}
             </fieldset>
-            <button class="form-group btn btn-outline-info" type="submit">
-                Update Activity
-            </button>
+            <button class="form-group btn btn-outline-info" type="submit" name="submitbutton">Make payment</button>
         </form>
     </div>
 {% endblock %}

@@ -38,4 +38,8 @@ urlpatterns = [
     path('courseinfo/deletecourse/<str:course_id>/', uviews.deletecourse, name='deletecourse'),
     path('courseinfo/updatecourse/<str:course_id>/', uviews.updatecourse, name='updatecourse'),
     path('courseinfo/updatecourse/', uviews.updatecourse, name='updatecourse'),
+    path('paymentinfo/', uviews.paymentinfo, name="paymentinfo"),
+    path('paymentinfo/enterpaymentinfo/', uviews.enterpaymentinfo, name='enterpaymentinfo'),
+    path('paymentinfo/deletepaymentinfo/', uviews.deletepaymentinfo, name='deletepaymentinfo'),
+    path('paymentinfo/makepayment/', uviews.makepayment, name='makepayment'),
 ]
